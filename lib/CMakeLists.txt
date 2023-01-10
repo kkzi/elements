@@ -212,71 +212,21 @@ if (APPLE)
 endif()
 
 ###############################################################################
-# Cairo
+# 3rdparty static libs
 
 if (MSVC)
-   target_include_directories(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/cairo/include)
-
-   if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-      target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/cairo/lib/x64/cairo.lib)
-   else()
-	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/cairo/lib/x86/cairo.lib)
-   endif()
-elseif (APPLE)
-	# TODO: add a min version specifiction
-	pkg_check_modules(cairo REQUIRED IMPORTED_TARGET cairo)
-   target_include_directories(elements PUBLIC ${cairo_INCLUDE_DIRS})
-   target_link_libraries(elements PUBLIC "${lib_dir}/cairo/lib/libcairo.a")            # Static link
-   target_link_libraries(elements PRIVATE "${lib_dir}/libpng/lib/libpng.a")            # Static link
-   target_link_libraries(elements PRIVATE "${lib_dir}/pixman/lib/libpixman-1.a")       # Static link
-   target_link_libraries(elements PRIVATE "${lib_dir}/zlib/lib/libz.a")                # Static link
-else()
-	# TODO: add a min version specifiction
-	pkg_check_modules(cairo REQUIRED IMPORTED_TARGET cairo)
-	target_link_libraries(elements PUBLIC PkgConfig::cairo)
+   set(LIBSDIR D:/Local/vcpkg/installed/x64-windows-static)
+   #target_link_directories(elements  PUBLIC ${LIBSDIR}/debug/lib)
+   #target_link_libraries(elements PUBLIC fontconfig cairo-script-interpreter cairo freetyped libexpatdMD pixman-1 libpng16d brotlienc-static brotlidec-static brotlicommon-static bz2d lzo2 zlibd
+   target_link_directories(elements  PUBLIC ${LIBSDIR}/lib)
+   target_link_libraries(elements PUBLIC fontconfig cairo-script-interpreter cairo freetype libexpatMD pixman-1 libpng16 brotlienc-static brotlidec-static brotlicommon-static bz2 lzo2 zlib
+   Msimg32)
+   target_include_directories(elements PUBLIC ${LIBSDIR}/include ${LIBSDIR}/include/cairo)
 endif()
 
 ###############################################################################
-# Fontconfig
 
-if (MSVC)
-   target_include_directories(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/fontconfig/include)
 
-   if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/fontconfig/x64/fontconfig.lib)
-   else()
-	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/fontconfig/x86/fontconfig.lib)
-   endif()
-elseif (APPLE)
-   pkg_check_modules(fontconfig REQUIRED IMPORTED_TARGET fontconfig)
-   target_include_directories(elements PUBLIC ${fontconfig_INCLUDE_DIRS})
-   target_link_libraries(elements PUBLIC "${lib_dir}/fontconfig/lib/libfontconfig.a")  # Static link
-   target_link_libraries(elements PUBLIC "${lib_dir}/expat/lib/libexpat.a")            # Static link
-else()
-   pkg_check_modules(fontconfig REQUIRED IMPORTED_TARGET fontconfig)
-   target_link_libraries(elements PUBLIC PkgConfig::fontconfig)
-endif()
-
-###############################################################################
-# Freetype
-
-if (MSVC)
-   target_include_directories(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/include)
-
-   if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/win64/freetype.lib)
-   else()
-	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/win32/freetype.lib)
-   endif()
-elseif (APPLE)
-   pkg_check_modules(freetype2 REQUIRED IMPORTED_TARGET freetype2)
-   target_include_directories(elements PUBLIC ${freetype2_INCLUDE_DIRS})
-   target_link_libraries(elements PUBLIC "${lib_dir}/freetype2/lib/libfreetype.a")     # Static link
-   target_link_libraries(elements PUBLIC "${lib_dir}/bzip2/lib/libbz2.a")              # Static link
-elseif (UNIX OR WIN32)
-   pkg_check_modules(freetype2 REQUIRED IMPORTED_TARGET freetype2)
-   target_link_libraries(elements PUBLIC PkgConfig::freetype2)
-endif()
 
 ###############################################################################
 # GTK (linux only)
